@@ -1,9 +1,9 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from PIL import Image
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.image
+# import matplotlib.pyplot as plt
+# import matplotlib.image
 from random import shuffle
 import sys
 import os
@@ -44,24 +44,19 @@ im['green'] = Image.open('/home/alex/Desktop/hearts_vk/hearts/green.png')
 
 #print(np.array(img).shape)
 
-mean = dict()
-# mean['black'] = (20, 20, 30)
-# mean['blue'] = (0,0,150)
-# mean['red'] = (150, 0, 0)
-# mean['purple'] = (109, 0, 150)
-# mean['yellow'] = (154, 134, 0)
-# mean['green'] = (45, 136, 45)
+mean = {'black': np.array([ 29.05,  27.42,  36.87]), 
+        'blue': np.array([  20.13,   99.44,  174.79]), 
+        'red': np.array([ 162.48,   33.22,   32.08]), 
+        'purple': np.array([ 104.5 ,   23.92, 131.09]), 
+        'yellow': np.array([ 197.36,  159.94,   40.95]), 
+        'green': np.array([  89.02,  134.15,   49.83])}
 
 for key, value in im.items():
     im[key] = im[key].resize((hsize[0], hsize[1]), Image.ANTIALIAS)
     im_np_arr[key] = np.array(im[key])
-    mean[key] = np.array(getAverageRGBN(im[key])[0:3])
+    #mean[key] = np.array(getAverageRGBN(im[key])[0:3])
 
-
-
-# values = list( mean.values() )
-# shuffle(values)
-# mean  = dict(zip(mean.keys(), values))
+print(mean)
 
 imgChange = Image.open(sys.argv[1])
 size = list(imgChange.size)
@@ -73,18 +68,12 @@ count_sq = (size[0] // hsize[0], size[1] // hsize[0])
 img_array = np.array(imgChange)
 size = img_array.shape[0:2]
 count_sq = (size[0] // hsize[0], size[1] // hsize[0])
-#print(size)
-#print(img_array.shape)
-#print(img_array[0:100, 100:200])
 
 for i in range(count_sq[0]*count_sq[1]):
     s_w, s_h = i % count_sq[0], i // count_sq[0]
-    #print(count_sq, i, s_w, s_h, s_w*hsize[0], s_h*hsize[1])
     imslice = img_array[s_w*hsize[0]:s_w*hsize[0]+hsize[0], s_h*hsize[1]:s_h*hsize[1]+hsize[1]]
     imslice = imslice.copy()
-    #print(imslice.flags)
     w, h, d = imslice.shape
-    # change shape
     imslice.shape = (w * h, d)
 
     slicemean = np.array(tuple(np.average(imslice, axis=0)))
@@ -93,20 +82,12 @@ for i in range(count_sq[0]*count_sq[1]):
     keymin = ""
     for key, value in im.items():
         dist = distance(slicemean, mean[key])
-        #print(dist, slicemean)
         if (mindist > dist):
             mindist = dist
             keymin = key
-    #         #print(key)
-    # if keymin == "":
-    #     print('blya')
     for i in range(hsize[0]):
         for j in range(hsize[1]):
-            # print(im_np_arr[keymin][i][j][3])
-            #if im_np_arr[keymin][i][j][3] > 15:
             img_array[s_w*hsize[1]+i][s_h*hsize[1]+j] = im_np_arr[keymin][i][j][0:3]
 
 name = sys.argv[1].split('/')[-1]
-matplotlib.image.imsave("/home/alex/images/hearted_"+name, img_array.astype(np.uint8))
-
-    #print(s_w, s_h)
+Image.fromarray(img_array).save("/home/alex/images/hearted_"+name)
