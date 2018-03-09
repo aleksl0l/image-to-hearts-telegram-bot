@@ -42,14 +42,11 @@ def img_to_heart(bot, update):
     # imgByteArr = io.BytesIO()
     # img.save(imgByteArr, format='PNG')
     # imgByteArr = imgByteArr.getvalue()
-    # os.system('python3 /home/alexlol/img_to_hearts.py ' + '/home/alexlol/images/'+str(count)+'.jpg')
 
     #залить и переслать
     bot.send_photo(chat_id=chat_id, photo=open(images_path + 'hearted_'+str(count)+'.jpg', 'rb'))
     # bot.send_photo(chat_id=chat_id, photo=img.getdata())
     count += 1
-    # bot.send_photo(chat_id=chat_id, photo=file_id)
-
 
 
 class Main():
@@ -92,8 +89,6 @@ app = App()
 # logger.addHandler(handler)
 
 daemon_runner = runner.DaemonRunner(app)
-#This ensures that the logger file handle does not get closed during daemonization
-# daemon_runner.daemon_context.files_preserve=[handler.stream]
 daemon_runner.do_action()
         
         
