@@ -29,10 +29,10 @@ def img_to_heart(bot, update):
     bot.send_message(chat_id=chat_id, text="Класс! Ты прислал картинку!")
     #обработать
     newFile = bot.get_file(file_id)
-    newFile.download(images_path + str(count) + '.jpg')
+    newFile.download(images_path + file_id + '.jpg')
 
-    img = img_to_hearts(Image.open(images_path + str(count) + '.jpg'))
-    img.save(images_path + 'hearted_'+str(count)+'.jpg')
+    img = img_to_hearts(Image.open(images_path + file_id + '.jpg'))
+    img.save(images_path + 'hearted_'+ file_id +'.jpg')
     # 
     # data = None
     # with io.BytesIO() as output:
@@ -44,7 +44,7 @@ def img_to_heart(bot, update):
     # imgByteArr = imgByteArr.getvalue()
 
     #залить и переслать
-    bot.send_photo(chat_id=chat_id, photo=open(images_path + 'hearted_'+str(count)+'.jpg', 'rb'))
+    bot.send_photo(chat_id=chat_id, photo=open(images_path + 'hearted_'+ file_id +'.jpg', 'rb'))
     # bot.send_photo(chat_id=chat_id, photo=img.getdata())
     count += 1
 
