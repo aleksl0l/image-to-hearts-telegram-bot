@@ -9,8 +9,12 @@ from img_to_hearts import img_to_hearts
 from PIL import Image
 from daemon import runner
 
-token_path = '/home/alex/git/image_to_hearts/token'
-images_path = '/home/alex/images/'
+import pref
+if pref.token_path:
+    token_path = pref.token_path
+else:
+    token_path = os.getcwd() + '//token' 
+images_path = pref.image_path
 
 
 count = 0
@@ -69,11 +73,11 @@ class Main():
 
 class App():
     def __init__(self):
-        self.stdin_path = '/dev/null'
-        self.stdout_path = '/dev/tty'
-        self.stderr_path = '/dev/tty'
-        self.pidfile_path =  '/tmp/bot.pid'
-        self.pidfile_timeout = 5
+        self.stdin_path = pref.stdin_path
+        self.stdout_path = pref.stdout_path
+        self.stderr_path = pref.stderr_path
+        self.pidfile_path =  pref.pidfile_path
+        self.pidfile_timeout = pref.pidfile_timeout
             
     def run(self):
         service = Main()
